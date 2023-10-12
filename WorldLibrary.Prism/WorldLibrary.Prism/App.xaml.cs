@@ -1,4 +1,5 @@
 using Prism;
+using Prism.DryIoc;
 using Prism.Ioc;
 using WorldLibrary.Prism.ViewModels;
 using WorldLibrary.Prism.Views;
@@ -8,7 +9,7 @@ using Xamarin.Forms;
 
 namespace WorldLibrary.Prism
 {
-    public partial class App
+    public partial class App 
     {
         public App(IPlatformInitializer initializer)
             : base(initializer)
@@ -19,15 +20,15 @@ namespace WorldLibrary.Prism
         {
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            await NavigationService.NavigateAsync("NavigationPage/LoginPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
 
-            containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
+            containerRegistry.RegisterForNavigation<NavigationPage>();            
+            containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
         }
     }
 }
