@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +20,12 @@ using WorldLibrary.Web.Data;
 using WorldLibrary.Web.Data.Entities;
 using WorldLibrary.Web.Helper;
 using WorldLibrary.Web.Repositories;
+using Microsoft.Extensions.Azure;
+using Azure.Storage.Queues;
+using Azure.Storage.Blobs;
+using Azure.Core.Extensions;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication;
 
 namespace WorldLibrary.Web
 {
@@ -50,31 +58,45 @@ namespace WorldLibrary.Web
                .AddDefaultTokenProviders()
                .AddEntityFrameworkStores<DataContext>();
 
-            services.AddAuthentication()
-                    .AddCookie()
-                .AddJwtBearer(cfg =>
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme=CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme=GoogleDefaults.AuthenticationScheme;
+            })
+                .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
                 {
-                    cfg.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidIssuer = this.Configuration["Token:Issuer"],
-                        ValidAudience = this.Configuration["Token:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(this.Configuration["Tokens:Key"]))
-                    };
-
+                    options.ClientId=Configuration["Authentication:Google:ClientId"];
+                    options.ClientSecret=Configuration["Authentication:Google:ClientSecret"];
+                    options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
                 })
-                .AddFacebook(options =>
-                {
-                    options.AppId="616234630717235";
-                    options.AppSecret="a6670e162c79744dad1c754fa21e7356";
-                });
+            .AddFacebook(options=>
+            {
+                options.AppId="616234630717235";
+                options.AppSecret="a6670e162c79744dad1c754fa21e7356";
+            } )
 
-            services.Configure<CookiePolicyOptions>(options =>
-            {                
-                options.CheckConsentNeeded = context => true;
-                
-                options.MinimumSameSitePolicy = SameSiteMode.None;
+            .AddCookie()
+            .AddJwtBearer(cfg =>
+            {
+                cfg.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = this.Configuration["Token:Issuer"],
+                    ValidAudience = this.Configuration["Token:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(this.Configuration["Tokens:Key"]))
+                };
+
             });
+            
+
+            services.AddSession();
+
+            //services.Configure<CookiePolicyOptions>(options =>
+            //{                
+            //    options.CheckConsentNeeded = context => true;
+                
+            //    options.MinimumSameSitePolicy = SameSiteMode.None;
+            //});
 
             services.AddDbContext<DataContext>(cfg =>
             {
@@ -92,6 +114,8 @@ namespace WorldLibrary.Web
             services.AddScoped<IReserveRepository, ReserveRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IAssessmentRepository, AssessmentRepository>();
+           
 
             services.AddScoped<IImageHelper, ImageHelper>();
             services.AddScoped<IConverterHelper, ConverterHelper>();
@@ -107,6 +131,7 @@ namespace WorldLibrary.Web
             });
 
             services.AddControllersWithViews();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -133,13 +158,19 @@ namespace WorldLibrary.Web
             app.UseAuthentication();
 
             app.UseAuthorization();
-
+            app.UseCookiePolicy();
+            app.UseSession();
             app.UseEndpoints(endpoints =>
-            {
+            {             
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                
+
             });
         }
     }
+    
 }

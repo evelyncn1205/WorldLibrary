@@ -150,6 +150,23 @@ namespace WorldLibrary.Web.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("WorldLibrary.Web.Data.Entities.Assessment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ReserveId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReserveId");
+
+                    b.ToTable("Assessments");
+                });
+
             modelBuilder.Entity("WorldLibrary.Web.Data.Entities.Book", b =>
                 {
                     b.Property<int>("Id")
@@ -698,6 +715,15 @@ namespace WorldLibrary.Web.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("WorldLibrary.Web.Data.Entities.Assessment", b =>
+                {
+                    b.HasOne("WorldLibrary.Web.Data.Entities.Reserve", "Reserve")
+                        .WithMany()
+                        .HasForeignKey("ReserveId");
+
+                    b.Navigation("Reserve");
                 });
 
             modelBuilder.Entity("WorldLibrary.Web.Data.Entities.Book", b =>
