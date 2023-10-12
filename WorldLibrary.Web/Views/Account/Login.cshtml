@@ -32,10 +32,10 @@
                 <input type="submit" value="Login" class="btn btn-success" />
                 <a asp-action="Register" class="btn btn-primary">Register New User</a>
                 <a asp-action="RecoverPassword" class="btn btn-link">Forgot your password?</a>
+                <a asp-area="" asp-controller="Account" asp-action="LoginGoogle" class="btn btn-primary">Login With Google</a>
+                <a asp-area="" asp-controller="Account" asp-action="Facebook" class="btn btn-primary">Login With Facebook</a>
             </div>
-            <div class="form-group">
-                 <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
-            </div>
+           
                        
         </form>
     </div>

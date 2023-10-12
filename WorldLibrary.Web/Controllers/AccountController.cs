@@ -1,24 +1,30 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using WorldLibrary.Web.Data.Entities;
+using WorldLibrary.Web.Helper;
+using WorldLibrary.Web.Models;
+using WorldLibrary.Web.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using WorldLibrary.Web.Data.Entities;
-using WorldLibrary.Web.Helper;
-using WorldLibrary.Web.Models;
-using WorldLibrary.Web.Repositories;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Logging;
-
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Collections.Generic;
+using Facebook;
+using Microsoft.AspNetCore.Authorization;
+using System.IO;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace WorldLibrary.Web.Controllers
 {
+   
     public class AccountController : Controller
     {
         private readonly IUserHelper _userHelper;
@@ -26,9 +32,10 @@ namespace WorldLibrary.Web.Controllers
         private readonly ICountryRepository _countryRepository;
         private readonly IConfiguration _configuration;
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly SignInManager<User> _signInManager;
-        private readonly ILogger<LoginViewModel> _logger;
+        private readonly SignInManager<User> _signInManager;        
         private readonly UserManager<User> _userManager;
+        string appid= string.Empty; 
+        string appsecret= string.Empty;
         public AccountController(IUserHelper userHelper,
             IMailHelper mailHelper,
             ICountryRepository countryRepository,
@@ -40,9 +47,11 @@ namespace WorldLibrary.Web.Controllers
             _countryRepository = countryRepository;
             _employeeRepository = employeeRepository;
             _configuration = configuration;
-           
+            var configuration1 = GetConfiguration();
+            appid = configuration1.GetSection("AppID").Value;
+            appsecret = configuration1.GetSection("AppSecret").Value;
         }
-
+        
         public IActionResult Login()
         {
             if (User.Identity.IsAuthenticated)
@@ -75,12 +84,90 @@ namespace WorldLibrary.Web.Controllers
             return View(model);
         }
 
-        
+        public async Task LoginGoogle()
+        {
+            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties()
+            {
+                RedirectUri=Url.Action("GoogleResponse")
+            });
+        }
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            var claims = result.Principal.Identities
+                .FirstOrDefault().Claims.Select(claim => new
+                {
+                    claim.Issuer,
+                    claim.OriginalIssuer,
+                    claim.Type,
+                    claim.Value,
+                });
 
+            return Json(claims);
+        }
+        public IConfiguration GetConfiguration()
+        {
+            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            return builder.Build();
+        }
 
+        private Uri RedirectUri
+        {
+            get
+            {
+                var uriBuilder =new UriBuilder(Request.Headers["Referer"].ToString());
+                uriBuilder.Query = null;
+                uriBuilder.Fragment = null;
+                uriBuilder.Path=Url.Action("FacebookCallback");
+                return uriBuilder.Uri;
+            }
+        }
+        //public IActionResult Facebook()
+        //{
+        //    var fb = new FacebookClient();
+        //    var loginurl = fb.GetLoginUrl(new
+        //    {
+        //        client_id = appid,
+        //        client_secret = appsecret,
+        //        redirect_uri = RedirectUri.AbsoluteUri,
+        //        response_type = "code",
+        //        scope = "email"
+        //    });
+        //    return Redirect(loginurl.AbsoluteUri);
+        //}
+        public IActionResult Facebook()
+        {
+            var appId = appid;
+            var appSecret = appsecret;
+            var redirectUri = RedirectUri.AbsoluteUri; // Substitua pela sua URL de redirecionamento
+            var scope = "email"; // As permissões que você deseja solicitar
+
+            var loginUrl = $"https://www.facebook.com/v13.0/dialog/oauth?client_id={appId}&redirect_uri={redirectUri}&scope={scope}";
+
+            return Redirect(loginUrl);
+        }
+        public IActionResult FacebookCalBack(string code )
+        {
+            var fb= new FacebookClient();
+            dynamic result = fb.Post("oauth/access_token", new
+            {
+                client_id=appid,
+                client_secret=appsecret,
+                redirect_uri= RedirectUri.AbsoluteUri,
+                code= code,
+            });
+            var accesstoken = result.access_token;
+            fb.AccessToken = accesstoken;
+            dynamic data = fb.Get("me?fields=link,first_name,last_name,email,gander,locale,timezone,verified,picture,age_range");
+            TempData["email"] = data.email;
+            TempData["name"]= data.first_name +" "+ data.last_name;
+            TempData["picture"] =data.picture.data.url;
+            return RedirectToAction("Index,Home");
+        }
         public async Task<IActionResult> Logout()
         {
             await _userHelper.LogoutAsync();
+            await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
 
         }
@@ -462,5 +549,7 @@ namespace WorldLibrary.Web.Controllers
             return Json(country.Cities.OrderBy(c => c.Name));
 
         }
+
+
     }
 }

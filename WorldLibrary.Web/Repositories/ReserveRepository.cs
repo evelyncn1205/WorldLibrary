@@ -483,7 +483,11 @@ namespace WorldLibrary.Web.Repositories
 
         public async Task<Reserve> GetReserveByIdAsync(int id)
         {
-            return await _context.Reserves.FindAsync(id);
+            await _context.Reserves.FindAsync(id);
+            return _context.Reserves
+                .Include(r => r.Book)
+                .Where(r => r.Id == id)
+                .FirstOrDefault();
         }
 
         public async Task<ReserveDetailTemp> GetReserveDetailTempAsync(int id)

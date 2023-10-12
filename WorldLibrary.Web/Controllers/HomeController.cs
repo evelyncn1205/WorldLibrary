@@ -1,19 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Mail;
-using System.Net;
-using System.Threading.Tasks;
-using WorldLibrary.Web.Data.Entities;
-using WorldLibrary.Web.Models;
 using WorldLibrary.Web.Data;
+using WorldLibrary.Web.Data.Entities;
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace WorldLibrary.Web.Controllers
 {
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -25,6 +22,7 @@ namespace WorldLibrary.Web.Controllers
             _context = context;
         }
 
+       
         public IActionResult Index()
         {
             return View();

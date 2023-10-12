@@ -23,7 +23,7 @@ namespace WorldLibrary.Web.Data
             _userHelper = userHelper;
             _random = new Random();
         }
-        public async Task SeedAsync() //Alterar
+        public async Task SeedAsync() 
         {
             await _context.Database.MigrateAsync();
 
@@ -121,7 +121,7 @@ namespace WorldLibrary.Web.Data
                     City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault()
 
                 };
-
+               
                 var result = await _userHelper.AddUserAsync(userAssistant, "123456");
 
                 if (result != IdentityResult.Success)
