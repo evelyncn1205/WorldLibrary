@@ -25,7 +25,7 @@
                     <DataTemplate>
                         <Grid>
                             <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SelectProductCommand}"/>
+                                <TapGestureRecognizer Command="{Binding SelectBookCommand}"/>
                             </Grid.GestureRecognizers>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />

@@ -34,6 +34,7 @@ namespace WorldLibrary.Prism
             containerRegistry.RegisterForNavigation<NavigationPage>();            
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<BooksPage, BooksPageViewModel>();
+            containerRegistry.RegisterForNavigation<BookDetailPage, BookDetailPageViewModel>();
         }
     }
 }
