@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             x:Class="WorldLibrary.Prism.Views.BookDetailPage"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <StackLayout Padding="10">
+            <ffimageloading:CachedImage
+                Aspect="AspectFit"
+                CacheDuration="50"
+                RetryCount="3"
+                RetryDelay="600"
+                Source="{Binding Book.ImageFullPath}"
+                WidthRequest="200" />
+            <Grid Padding="10,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    Text="Title" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Book.Title}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    Text="Author" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Text="{Binding Book.Author}" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    Text="Year" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Text="{Binding Book.Year}" />
+                <Label
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    Text="Synopsis" />
+                <Label
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Text="{Binding Book.Synopsis}" />
+                <Label
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    Text="Category"/>
+                <Label
+                    Grid.Row="4"
+                    Grid.Column="1"                    
+                    Text="{Binding Book.Category}"/>
+                <Label
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    Text="Quantity" />
+                <Label
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Text="{Binding Book.Quantity}" />
+                <Label
+                    Grid.Row="6"
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    Text="Assessment" />
+                <Label
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    Text="{Binding Book.Assessment}" />
+            </Grid>
+
+            <Button
+                BackgroundColor="Navy"
+                Command="{Binding AddToCartBinding}"
+                CornerRadius="10"
+                Text="Reserve"
+                TextColor="White"
+                VerticalOptions="EndAndExpand" />
+        </StackLayout>
+    </ScrollView>
+
+</ContentPage>

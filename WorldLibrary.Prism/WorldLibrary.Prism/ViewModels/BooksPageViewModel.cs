@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using WorldLibrary.Prism.ItemViewModels;
 using WorldLibrary.Prism.Models;
 using WorldLibrary.Prism.Services;
 using Xamarin.Essentials;
@@ -17,7 +18,7 @@ namespace WorldLibrary.Prism.ViewModels
     {
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
-        private ObservableCollection<BookResponse> _books;
+        private ObservableCollection<BookItemViewModel> _books;
         private bool _isRunning;
         private string _search;
         private List<BookResponse> _myBooks;
@@ -31,7 +32,7 @@ namespace WorldLibrary.Prism.ViewModels
             LoadBooksAsync();
         }
 
-        public ObservableCollection<BookResponse> Books
+        public ObservableCollection<BookItemViewModel> Books
         {
             get => _books;
             set => SetProperty(ref _books, value);
@@ -53,12 +54,7 @@ namespace WorldLibrary.Prism.ViewModels
             set => SetProperty(ref _isRunning, value);
         }
 
-
-        //public ObservableCollection<BookItemViewModel> Books
-        //{
-        //    get => _books;
-        //    set => SetProperty(ref _books, value);
-        //}
+       
         private async void LoadBooksAsync()
         {
 
@@ -90,35 +86,49 @@ namespace WorldLibrary.Prism.ViewModels
             //Books = new ObservableCollection<BookResponse>(myBooks);
             ShowBooks();
         }
+
+
         private void ShowBooks()
         {
             if (string.IsNullOrEmpty(Search))
             {
-                Books = new ObservableCollection<BookResponse>(_myBooks);
+                Books = new ObservableCollection<BookItemViewModel>(_myBooks.Select(p =>
+                new BookItemViewModel(_navigationService)
+                {
+                    Id = p.Id,
+                    Title = p.Title,    
+                    Author = p.Author,
+                    Category = p.Category,
+                    Assessment = p.Assessment,
+                    ImageId = p.ImageId,
+                    Synopsis=p.Synopsis,
+                    Year=p.Year,
+                    Quantity=p.Quantity,
+                    ImageFullPath=p.ImageFullPath,
+                    User=p.User,
+                }).ToList());
             }
             else
             {
-                Books = new ObservableCollection<BookResponse>(
-                    _myBooks.Where(p => p.Title.ToLower().Contains(Search.ToLower())));
+                Books = new ObservableCollection<BookItemViewModel>(_myBooks.Select(p =>
+                new BookItemViewModel(_navigationService)
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Author = p.Author,
+                    Category = p.Category,
+                    Assessment = p.Assessment,
+                    ImageId = p.ImageId,
+                    Synopsis=p.Synopsis,
+                    Year=p.Year,
+                    Quantity=p.Quantity,
+                    ImageFullPath=p.ImageFullPath,
+                    User=p.User,
+                })
+                .Where(p => p.Title.ToLower().Contains(Search.ToLower()))
+                .ToList());
             }
         }
-
-        //private void ShowBooks()
-        //{
-        //    if (string.IsNullOrEmpty(Search))
-        //    {
-        //        Books = new ObservableCollection<BookItemViewModel>(_myBooks.Select(p =>
-        //        new BookItemViewModel(_navigationService)
-        //        {
-
-        //        }));
-        //    }
-        //    else
-        //    {
-        //        Books = new ObservableCollection<BookItemViewModel>(
-        //            _myBooks.Where(p => p.Name.ToLower().Contains(Search.ToLower())));
-        //    }
-        //}
     }
 }
 
