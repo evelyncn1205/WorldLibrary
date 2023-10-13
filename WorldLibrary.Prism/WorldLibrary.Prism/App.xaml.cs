@@ -1,6 +1,7 @@
 using Prism;
 using Prism.DryIoc;
 using Prism.Ioc;
+using Prism.Navigation;
 using Syncfusion.Licensing;
 using WorldLibrary.Prism.Services;
 using WorldLibrary.Prism.ViewModels;
@@ -24,7 +25,8 @@ namespace WorldLibrary.Prism
 
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("NavigationPage/BooksPage");
+            await NavigationService.NavigateAsync
+                ($"/{nameof(WorldLibraryMasterDetailPage)}/NavigationPage/{nameof(BooksPage)}");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -35,6 +37,9 @@ namespace WorldLibrary.Prism
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<BooksPage, BooksPageViewModel>();
             containerRegistry.RegisterForNavigation<BookDetailPage, BookDetailPageViewModel>();
+            containerRegistry.RegisterForNavigation<WorldLibraryMasterDetailPage, WorldLibraryMasterDetailPageViewModel>();
+            containerRegistry.RegisterForNavigation<ModifyUserPage, ModifyUserPageViewModel>();
+            containerRegistry.RegisterForNavigation<ReservesPage, ReservesPageViewModel>();
         }
     }
 }
