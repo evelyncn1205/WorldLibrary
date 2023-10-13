@@ -5,7 +5,9 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              x:Class="WorldLibrary.Prism.Views.BookDetailPage"
-             Title="{Binding Title}">
+             xmlns:i18n="clr-namespace:WorldLibrary.Prism.Helpers"
+             Title="{Binding Title}"
+             BackgroundColor="{StaticResource ColorBackground}">
 
     <ScrollView>
         <StackLayout Padding="10">
@@ -34,7 +36,7 @@
                     Grid.Row="0"
                     Grid.Column="0"
                     FontAttributes="Bold"
-                    Text="Title" />
+                    Text="{i18n:Translate Title}" />
                 <Label
                     Grid.Row="0"
                     Grid.Column="1"
@@ -43,7 +45,7 @@
                     Grid.Row="1"
                     Grid.Column="0"
                     FontAttributes="Bold"
-                    Text="Author" />
+                    Text="{i18n:Translate Author}" />
                 <Label
                     Grid.Row="1"
                     Grid.Column="1"
@@ -52,7 +54,7 @@
                     Grid.Row="2"
                     Grid.Column="0"
                     FontAttributes="Bold"
-                    Text="Year" />
+                    Text="{i18n:Translate Year}" />
                 <Label
                     Grid.Row="2"
                     Grid.Column="1"
@@ -61,7 +63,7 @@
                     Grid.Row="3"
                     Grid.Column="0"
                     FontAttributes="Bold"
-                    Text="Synopsis" />
+                    Text="{i18n:Translate Synopsis}" />
                 <Label
                     Grid.Row="3"
                     Grid.Column="1"
@@ -70,7 +72,7 @@
                     Grid.Row="4"
                     Grid.Column="0"
                     FontAttributes="Bold"
-                    Text="Category"/>
+                    Text="{i18n:Translate Category}"/>
                 <Label
                     Grid.Row="4"
                     Grid.Column="1"                    
@@ -79,7 +81,7 @@
                     Grid.Row="5"
                     Grid.Column="0"
                     FontAttributes="Bold"
-                    Text="Quantity" />
+                    Text="{i18n:Translate Quantity}" />
                 <Label
                     Grid.Row="5"
                     Grid.Column="1"
@@ -88,7 +90,7 @@
                     Grid.Row="6"
                     Grid.Column="0"
                     FontAttributes="Bold"
-                    Text="Assessment" />
+                    Text="{i18n:Translate Assessment}" />
                 <Label
                     Grid.Row="6"
                     Grid.Column="1"
@@ -96,10 +98,10 @@
             </Grid>
 
             <Button
-                BackgroundColor="Navy"
+                BackgroundColor="{StaticResource ColorAccent}"
                 Command="{Binding AddToCartBinding}"
                 CornerRadius="10"
-                Text="Reserve"
+                Text="{i18n:Translate Reserve}"
                 TextColor="White"
                 VerticalOptions="EndAndExpand" />
         </StackLayout>

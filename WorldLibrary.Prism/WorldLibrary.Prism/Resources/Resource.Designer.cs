@@ -151,6 +151,24 @@ namespace WorldLibrary.Prism.Resources {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Login.
+        /// </summary>
+        internal static string Login {
+            get {
+                return ResourceManager.GetString("Login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Modify User.
+        /// </summary>
+        internal static string ModifyUser {
+            get {
+                return ResourceManager.GetString("ModifyUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Quantity.
         /// </summary>
         internal static string Quantity {
@@ -165,6 +183,15 @@ namespace WorldLibrary.Prism.Resources {
         internal static string Reserve {
             get {
                 return ResourceManager.GetString("Reserve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Reserves.
+        /// </summary>
+        internal static string Reserves {
+            get {
+                return ResourceManager.GetString("Reserves", resourceCulture);
             }
         }
         

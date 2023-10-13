@@ -36,6 +36,11 @@ namespace WorldLibrary.Prism.Helpers
         public static string Synopsis => Resource.Synopsis;
         public static string Reserve => Resource.Reserve;
         public static string ImageFullPath => Resource.ImageFullPath;
+        public static string Reserves => Resource.Reserves;
+        public static string ModifyUser => Resource.ModifyUser;
+        public static string Login => Resource.Login;
+       
+
 
     }
 }

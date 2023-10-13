@@ -145,4 +145,13 @@
   <data name="ImageFullPath" xml:space="preserve">
     <value>Imagen</value>
   </data>
+  <data name="Login" xml:space="preserve">
+    <value>Sesión Iniciada</value>
+  </data>
+  <data name="ModifyUser" xml:space="preserve">
+    <value>Modificar usuario</value>
+  </data>
+  <data name="Reserves" xml:space="preserve">
+    <value>Reservas</value>
+  </data>
 </root>
