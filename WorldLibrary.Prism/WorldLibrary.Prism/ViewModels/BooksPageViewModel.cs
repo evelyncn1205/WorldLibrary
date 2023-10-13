@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using WorldLibrary.Prism.Helpers;
 using WorldLibrary.Prism.ItemViewModels;
 using WorldLibrary.Prism.Models;
 using WorldLibrary.Prism.Services;
@@ -28,7 +29,7 @@ namespace WorldLibrary.Prism.ViewModels
         {
             _navigationService = navigationService;
             _apiService = apiService;
-            Title = "Book Page";
+            Title = Languages.Books;
             LoadBooksAsync();
         }
 
@@ -63,8 +64,8 @@ namespace WorldLibrary.Prism.ViewModels
                 Device.BeginInvokeOnMainThread(async () =>
                 {
                     await App.Current.MainPage.DisplayAlert(
-                        "Error",
-                        "Check internet connection", "Accept");
+                       Languages.Error,
+                       Languages.ConnectionError, Languages.Accept);
                 });
                 return;
             }
@@ -78,12 +79,11 @@ namespace WorldLibrary.Prism.ViewModels
 
             if (!response.IsSuccess)
             {
-                await App.Current.MainPage.DisplayAlert("Error", response.Message, "Accept");
+                await App.Current.MainPage.DisplayAlert(Languages.Error, response.Message, Languages.Accept);
                 return;
             }
 
             _myBooks = (List<BookResponse>)response.Result;
-            //Books = new ObservableCollection<BookResponse>(myBooks);
             ShowBooks();
         }
 
