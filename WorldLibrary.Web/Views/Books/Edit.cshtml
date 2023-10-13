@@ -56,6 +56,11 @@
                 <span asp-validation-for="StatusBook" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" class="form-control" type="file" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="BookPdf" class="control-label"></label>
                 <input asp-for="BookPdf" class="form-control" type="file" />
                 <span asp-validation-for="BookPdf" class="text-danger"></span>

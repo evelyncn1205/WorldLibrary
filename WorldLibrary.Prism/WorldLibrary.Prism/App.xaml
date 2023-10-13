@@ -6,6 +6,10 @@
   <Application.Resources>
 
     <!-- Application resource dictionary -->
+        <ResourceDictionary>
+            <!--Patameters-->
+            <x:String x:Key="UrlAPI">https://worldlibraryweb.azurewebsites.net/</x:String>
 
-  </Application.Resources>
+        </ResourceDictionary>
+    </Application.Resources>
 </prism:PrismApplication>
